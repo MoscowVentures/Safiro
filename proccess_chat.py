@@ -81,7 +81,7 @@ async def audio_answer(answer: UserAnswer, request: Request):
 
     auth_header = request.headers.get("Authorization")
     if auth_header:
-        auth_token = '_'.join(['chat', auth_header.split()[1]])
+        auth_token = auth_header
     else:
         # return {'ts': 'ts1'}
         raise HTTPException(status_code=400, detail="Please provide auth token.")
