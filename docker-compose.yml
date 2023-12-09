@@ -4,6 +4,12 @@ services:
   jeno:
     build: .
     ports:
-      - "80:80"
+      - "8000:8000"
     volumes:
       - .:/app
+    networks:
+      - main_network
+
+networks:
+  main_network:
+    driver: bridge

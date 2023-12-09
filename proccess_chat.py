@@ -6,6 +6,7 @@ import openai
 from fastapi import FastAPI, HTTPException, Request
 from fastapi.responses import StreamingResponse
 from pydantic import BaseModel
+from dotenv import load_dotenv
 
 app = FastAPI()
 
