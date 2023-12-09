@@ -23,6 +23,7 @@ try:
     for _asst in my_assistants:
         if _asst.name == os.getenv('CALLBOT_NAME'):
             bot_id = _asst.id
+            print(bot_id)
             break
 except Exception as e:
     print(e)
@@ -57,6 +58,7 @@ def get_thread_id(user_id):
 
 def send_message(answer, thread_id):
     bot_id = get_bot()
+    print(bot_id)
     if bot_id is None:
         raise HTTPException(status_code=500, detail="Bot is not found.")
 
@@ -85,6 +87,7 @@ async def audio_answer(answer: UserAnswer, request: Request):
     print(auth_token)
     try:
         thread_id = get_thread_id(auth_token)
+        print(thread_id)
         if not answer.user_answer:
             answer = UserAnswer(user_answer=os.getenv('START_PIPELINE'))
             print(auth_token)
