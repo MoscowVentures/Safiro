@@ -4,7 +4,7 @@ import time
 import requests
 import openai
 from fastapi import FastAPI, HTTPException, Request
-from fastapi.responses import StreamingResponse
+from fastapi.responses import StreamingResponse, FileResponse
 from pydantic import BaseModel
 from dotenv import load_dotenv
 
@@ -124,9 +124,10 @@ async def audio_answer(answer: UserAnswer, request: Request):
 
 
         ts = int(time.time())
-        # tts_response.stream_to_file(f'./{auth_token}_{ts}.mp3')
+        tts_response.stream_to_file(f'./{auth_token}_{ts}.mp3')
         # response = requests.get(audio_url, stream=True)
-        return StreamingResponse(tts_response.iter_bytes(chunk_size=1024), media_type="audio/mpeg")
+        return FileResponse(f'./{auth_token}_{ts}.mp3)
+        return StreamingResponse(tts_response.iter_bytes(chunk_size=1024), media_type="audio/mpeg", headers={'content-length': })
         return {'ts': 'ts3'}
 
     except Exception as er:
