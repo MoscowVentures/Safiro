@@ -86,13 +86,18 @@ async def audio_answer(answer: UserAnswer, request: Request):
     try:
         thread_id = get_thread_id(auth_token)
         if not answer.user_answer:
-            answer = UserAnswer(user_answer=os.getenv('START_PIPELINE')) 
+            answer = UserAnswer(user_answer=os.getenv('START_PIPELINE'))
+            print(auth_token)
+        print(auth_token)
         run = send_message(answer, thread_id)
+        print(auth_token)
         while run.status in ['queued', 'in_progress']:
             run = client.beta.threads.runs.retrieve(
                 thread_id=thread_id, run_id=run.id,
                 )
+            print(auth_token)
 
+        print(auth_token)
         if run.status != 'completed':
             return {'ts': 'ts2'}
             # raise HTTPException(status_code=500,
