@@ -66,13 +66,13 @@ def send_message(answer, thread_id):
     run = client.beta.threads.runs.create(
         thread_id=thread_id,
         assistant_id=bot_id,
-        instructions=answer.user_answer
+        instructions=answer.text
     )
     return run
 
 
 class UserAnswer(BaseModel):
-    user_answer: str
+    text: str
 
 
 @jeno.post("/call/")
@@ -89,8 +89,8 @@ async def audio_answer(answer: UserAnswer, request: Request):
     try:
         thread_id = get_thread_id(auth_token)
         print(thread_id)
-        if not answer.user_answer:
-            answer = UserAnswer(user_answer=os.getenv('START_PIPELINE'))
+        if not answer.text:
+            answer = UserAnswer(text=os.getenv('START_PIPELINE'))
             print(auth_token)
         print(auth_token)
         run = send_message(answer, thread_id)
@@ -115,7 +115,7 @@ async def audio_answer(answer: UserAnswer, request: Request):
             print(text_response)
             tts_response = client.audio.speech.create(model="tts-1",
                                                   input=text_response, voice='shimmer',
-                                                  speed=1.1,
+                                                  speed=1.4,
                                                   )
         except Exception as err:    
             raise HTTPException(status_code=500,
