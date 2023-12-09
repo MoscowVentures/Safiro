@@ -108,7 +108,7 @@ async def audio_answer(answer: UserAnswer, request: Request):
                                                   )
         except Exception as err:
             raise HTTPException(status_code=500,
-                                detail='Audio_data error',
+                                detail=f'Audio_data error {err}',
                             )
 
 
