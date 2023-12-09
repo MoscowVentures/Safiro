@@ -96,20 +96,20 @@ async def audio_answer(answer: UserAnswer, request: Request):
             raise HTTPException(status_code=500,
                                 detail='Message is not proccessed. Please try again.'
                             )
-        try:
-            messages = client.beta.threads.messages.list(
-                        thread_id=thread_id, limit=1
-                        )
-            text_response = messages.data[0].content[0].dict()['text']['value']
+        # try:
+        #     messages = client.beta.threads.messages.list(
+        #                 thread_id=thread_id, limit=1
+        #                 )
+        #     text_response = messages.data[0].content[0].dict()['text']['value']
 
-            tts_response = client.audio.speech.create(model="tts-1",
-                                                  input=text_response, voice='shimmer',
-                                                  speed=1.1,
-                                                  )
-        except Exception as err:
-            raise HTTPException(status_code=500,
-                                detail=f'Audio_data error {err}',
-                            )
+        #     tts_response = client.audio.speech.create(model="tts-1",
+        #                                           input=text_response, voice='shimmer',
+        #                                           speed=1.1,
+        #                                           )
+        # except Exception as err:    
+        #     raise HTTPException(status_code=500,
+        #                         detail=f'Audio_data error {err}',
+        #                     )
 
 
         ts = int(time.time())
