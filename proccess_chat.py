@@ -8,6 +8,8 @@ from fastapi.responses import StreamingResponse
 from pydantic import BaseModel
 from dotenv import load_dotenv
 
+load_dotenv()
+
 app = FastAPI()
 
 client = openai.OpenAI(api_key=os.getenv('API_KEY'))
