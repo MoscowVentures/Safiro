@@ -10,7 +10,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-app = FastAPI()
+jeno = FastAPI()
 
 client = openai.OpenAI(api_key=os.getenv('API_KEY'))
         
@@ -119,4 +119,4 @@ async def audio_answer(answer: UserAnswer, request: Request):
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    uvicorn.run(jeno, host="0.0.0.0", port=8000)
