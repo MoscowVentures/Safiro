@@ -131,7 +131,9 @@ async def audio_answer(answer: UserAnswer, request: Request):
         # return RedirectResponse(f'/{auth_token}_{ts}.mp3')
         # return FileResponse(f'./{auth_token}_{ts}.mp3')
         # return open(f'./{auth_token}_{ts}.mp3', 'rb').read(), 200, {'Content-Type': 'audio/mpeg'}
-        return StreamingResponse(tts_response.iter_bytes(chunk_size=1024), media_type="audio/mpeg")
+        return StreamingResponse(tts_response.iter_bytes(chunk_size=1024), 
+                                 headers={'Connection': 'close'},
+                                 media_type="audio/mpeg", filename='testbebra.mp3')
         return {'ts': 'ts3'}
 
     except Exception as er:
