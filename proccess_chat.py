@@ -37,6 +37,7 @@ def get_bot():
     
     try:
         my_assistants = client.beta.assistants.list()
+        print(list(map(lambda x: x.name, my_assistants)))
         assert os.getenv('CALLBOT_NAME') in map(lambda x: x.name, my_assistants)
         for _asst in my_assistants:
             if _asst.name == os.getenv('CALLBOT_NAME'):
