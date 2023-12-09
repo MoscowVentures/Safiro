@@ -16,9 +16,9 @@ user2thread = {}
 
 try:
     my_assistants = client.beta.assistants.list()
-    assert os.getenv('BOT_NAME') in map(lambda x: x.name, my_assistants)
+    assert os.getenv('CALLBOT_NAME') in map(lambda x: x.name, my_assistants)
     for _asst in my_assistants:
-        if _asst.name == os.getenv('BOT_NAME'):
+        if _asst.name == os.getenv('CALLBOT_NAME'):
             bot_id = _asst.id
             break
 except Exception as e:
@@ -33,9 +33,9 @@ def get_bot():
     
     try:
         my_assistants = client.beta.assistants.list()
-        assert os.getenv('BOT_NAME') in map(lambda x: x.name, my_assistants)
+        assert os.getenv('CALLBOT_NAME') in map(lambda x: x.name, my_assistants)
         for _asst in my_assistants:
-            if _asst.name == os.getenv('BOT_NAME'):
+            if _asst.name == os.getenv('CALLBOT_NAME'):
                 bot_id = _asst.id
     
     except Exception as e:
@@ -82,7 +82,7 @@ async def audio_answer(answer: UserAnswer, request: Request):
     try:
         thread_id = get_thread_id(auth_token)
         if not answer.user_answer:
-            answer = UserAnswer(user_answer=)
+            answer = UserAnswer(user_answer=os.getenv('START_PIPELINE')) 
         run = send_message(answer, thread_id)
         while run.status in ['queued', 'in_progress']:
             run = client.beta.threads.runs.retrieve(
