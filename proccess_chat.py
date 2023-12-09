@@ -83,8 +83,8 @@ async def audio_answer(answer: UserAnswer, request: Request):
     if auth_header:
         auth_token = '_'.join(['chat', auth_header.split()[1]])
     else:
-        return {'ts': 'ts1'}
-        # raise HTTPException(status_code=400, detail="Please provide auth token.")
+        # return {'ts': 'ts1'}
+        raise HTTPException(status_code=400, detail="Please provide auth token.")
     print(auth_token)
     try:
         thread_id = get_thread_id(auth_token)
@@ -103,30 +103,30 @@ async def audio_answer(answer: UserAnswer, request: Request):
 
         print(auth_token)
         if run.status != 'completed':
-            return {'ts': 'ts2'}
-            # raise HTTPException(status_code=500,
-            #                     detail='Message is not proccessed. Please try again.'
-            #                 )
-        # try:
-        #     messages = client.beta.threads.messages.list(
-        #                 thread_id=thread_id, limit=1
-        #                 )
-        #     text_response = messages.data[0].content[0].dict()['text']['value']
-
-        #     tts_response = client.audio.speech.create(model="tts-1",
-        #                                           input=text_response, voice='shimmer',
-        #                                           speed=1.1,
-        #                                           )
-        # except Exception as err:    
-        #     raise HTTPException(status_code=500,
-        #                         detail=f'Audio_data error {err}',
-        #                     )
+            # return {'ts': 'ts2'}
+            raise HTTPException(status_code=500,
+                                detail='Message is not proccessed. Please try again.'
+                            )
+        try:
+            messages = client.beta.threads.messages.list(
+                        thread_id=thread_id, limit=1
+                        )
+            text_response = messages.data[0].content[0].dict()['text']['value']
+            print(text_response)
+            tts_response = client.audio.speech.create(model="tts-1",
+                                                  input=text_response, voice='shimmer',
+                                                  speed=1.1,
+                                                  )
+        except Exception as err:    
+            raise HTTPException(status_code=500,
+                                detail=f'Audio_data error {err}',
+                            )
 
 
         ts = int(time.time())
-        # tts_response.stream_to_file(f'./{auth_token}_{ts}.mp3')
+        tts_response.stream_to_file(f'./{auth_token}_{ts}.mp3')
         # response = requests.get(audio_url, stream=True)
-        # return StreamingResponse(tts_response.iter_bytes(chunk_size=1024), media_type="audio/mpeg")
+        return StreamingResponse(tts_response.iter_bytes(chunk_size=1024), media_type="audio/mpeg")
         return {'ts': 'ts3'}
 
     except Exception as er:
