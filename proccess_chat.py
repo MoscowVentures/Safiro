@@ -115,7 +115,8 @@ async def audio_answer(answer: UserAnswer, request: Request):
         ts = int(time.time())
         # tts_response.stream_to_file(f'./{auth_token}_{ts}.mp3')
         # response = requests.get(audio_url, stream=True)
-        return StreamingResponse(tts_response.iter_bytes(chunk_size=1024), media_type="audio/mpeg")
+        # return StreamingResponse(tts_response.iter_bytes(chunk_size=1024), media_type="audio/mpeg")
+        return {'ts': ts}
 
     except Exception as er:
         raise HTTPException(status_code=500, detail=str(er))
