@@ -80,8 +80,9 @@ async def audio_answer(answer: UserAnswer, request: Request):
     if auth_header:
         auth_token = '_'.join(['chat', auth_header.split()[1]])
     else:
-        raise HTTPException(status_code=400, detail="Please provide auth token.")
-
+        return {'ts': 'ts1'}
+        # raise HTTPException(status_code=400, detail="Please provide auth token.")
+    print(auth_token)
     try:
         thread_id = get_thread_id(auth_token)
         if not answer.user_answer:
@@ -93,9 +94,10 @@ async def audio_answer(answer: UserAnswer, request: Request):
                 )
 
         if run.status != 'completed':
-            raise HTTPException(status_code=500,
-                                detail='Message is not proccessed. Please try again.'
-                            )
+            return {'ts': 'ts2'}
+            # raise HTTPException(status_code=500,
+            #                     detail='Message is not proccessed. Please try again.'
+            #                 )
         # try:
         #     messages = client.beta.threads.messages.list(
         #                 thread_id=thread_id, limit=1
@@ -116,7 +118,7 @@ async def audio_answer(answer: UserAnswer, request: Request):
         # tts_response.stream_to_file(f'./{auth_token}_{ts}.mp3')
         # response = requests.get(audio_url, stream=True)
         # return StreamingResponse(tts_response.iter_bytes(chunk_size=1024), media_type="audio/mpeg")
-        return {'ts': ts}
+        return {'ts': 'ts3'}
 
     except Exception as er:
         raise HTTPException(status_code=500, detail=str(er))
