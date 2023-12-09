@@ -72,7 +72,7 @@ class UserAnswer(BaseModel):
     user_answer: str
 
 
-@app.post("/call/")
+@jeno.post("/call/")
 async def audio_answer(answer: UserAnswer, request: Request):
     global bot_id
 
