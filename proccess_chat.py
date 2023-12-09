@@ -13,7 +13,7 @@ load_dotenv()
 jeno = FastAPI()
 
 client = openai.OpenAI(api_key=os.getenv('API_KEY'))
-        
+
 bot_id = None
 user2thread = {}
 
@@ -48,8 +48,6 @@ def get_bot():
 
 
 def get_thread_id(user_id):
-    # TODO: Pass some pre-messages to thread
-
     if user_id not in user2thread:
         thread = client.beta.threads.create()
         user2thread[user_id] = thread.id
@@ -59,7 +57,6 @@ def get_thread_id(user_id):
 
 def send_message(answer, thread_id):
     bot_id = get_bot()
-    print(bot_id)
     if bot_id is None:
         raise HTTPException(status_code=500, detail="Bot is not found.")
 
@@ -83,28 +80,18 @@ async def audio_answer(answer: UserAnswer, request: Request):
     if auth_header:
         auth_token = auth_header
     else:
-        # return {'ts': 'ts1'}
         raise HTTPException(status_code=400, detail="Please provide auth token.")
-    print(auth_token)
     try:
         thread_id = get_thread_id(auth_token)
-        print(thread_id)
         if not answer.text:
             answer = UserAnswer(text=os.getenv('START_PIPELINE'))
-            print(auth_token)
-        print(auth_token)
-        print(answer)
         run = send_message(answer, thread_id)
-        print(auth_token)
         while run.status in ['queued', 'in_progress']:
             run = client.beta.threads.runs.retrieve(
                 thread_id=thread_id, run_id=run.id,
                 )
-            print(auth_token)
 
-        print(auth_token)
         if run.status != 'completed':
-            # return {'ts': 'ts2'}
             raise HTTPException(status_code=500,
                                 detail='Message is not proccessed. Please try again.'
                             )
@@ -113,9 +100,9 @@ async def audio_answer(answer: UserAnswer, request: Request):
                         thread_id=thread_id, limit=1
                         )
             text_response = messages.data[0].content[0].dict()['text']['value']
-            print(text_response)
+    
             tts_response = client.audio.speech.create(model="tts-1",
-                                                  input=text_response, voice='shimmer',
+                                                  input=text_response, voice='',
                                                   speed=1.4,
                                                   )
         except Exception as err:    
@@ -126,13 +113,8 @@ async def audio_answer(answer: UserAnswer, request: Request):
 
         ts = int(time.time())
         tts_response.stream_to_file(f'./{auth_token}_{ts}.mp3')
-        
-        # response = requests.get(audio_url, stream=True)
-        # return RedirectResponse(f'/{auth_token}_{ts}.mp3')
+
         return FileResponse(f'./{auth_token}_{ts}.mp3')
-        # return open(f'./{auth_token}_{ts}.mp3', 'rb').read(), 200, {'Content-Type': 'audio/mpeg'}
-        # return StreamingResponse(tts_response.iter_bytes(chunk_size=1024), media_type="audio/mpeg")
-        # return {'ts': 'ts3'}
 
     except Exception as er:
         raise HTTPException(status_code=500, detail=str(er))
@@ -141,3 +123,4 @@ async def audio_answer(answer: UserAnswer, request: Request):
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(jeno, host="0.0.0.0", port=8000)
+
